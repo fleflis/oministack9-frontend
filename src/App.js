@@ -1,12 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import api from './services/api'
 import './App.css';
 import logo from './assets/logo.svg'
 
 function App() {
-  function handleSubmit(e) {
+  const [email, setEmail] = useState('')
+
+  async function handleSubmit(e) {
     e.preventDefault();
-    console.log(' hello world')
+
+    const response = await api.post('/sessions',{email})
+    
+    const {_id} = response.data
+
+    localStorage.setItem('user',_id)
   }
 
 
@@ -20,7 +27,7 @@ function App() {
         </p>
         <form onSubmit={handleSubmit}>
           <label htmlFor="email">Email *</label>
-          <input type="email" name="email" id="email" placeholder="Seu melhor email!"/>
+          <input type="email" name="email" id="email" placeholder="Seu melhor email!" value={email} onChange={event => setEmail(event.target.value)}/>
           <button className="btn" type="submit">Entrar</button>
         </form>
       </div>
