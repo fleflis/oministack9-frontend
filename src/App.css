@@ -61,7 +61,7 @@ button {
 	margin-bottom: 8px;
 }
 
-.content form label {
+.content form span {
 	font-weight: normal;
 	color: #999999;
 	font-size: 12px;
