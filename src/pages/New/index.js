@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react' ;
+import api from '../../services/api'
 import camera from '../../assets/camera.svg'
 import './styles.css'
 
-export default function New() {
+export default function New({history}) {
     const [company, setCompany] = useState('')
     const [techs, setTechs] = useState('')  
     const [price, setPrice] = useState('')
@@ -12,8 +13,20 @@ export default function New() {
         return thumbnail ? URL.createObjectURL(thumbnail) : null
     }, [thumbnail] )
 
-    function handleSubmit() {
+    async function handleSubmit(event) {
+        event.preventDefault()
+        const data = new FormData();
+        const user_id = localStorage.getItem('user')
 
+        data.append('thumbnail', thumbnail)
+        data.append('company', company)
+        data.append('techs', techs)
+        data.append('price', price)
+
+        api.post('/spots', data, {
+            headers: {user_id}
+        })
+        history.push('/dashboard')
     }
 
 
@@ -30,7 +43,7 @@ export default function New() {
             <label htmlFor="techs">TECNOLOGIAS * <span>(separadas por vírgula)</span></label>
             <input type="text" id="techs" placeholder="Quais tecnologias usam?" value={techs} onChange={event => setTechs(event.target.value)} />
             <label htmlFor="price">VALOR DA DIÁRIA * <span>(em branco para GRATUTIO)</span></label>
-            <input type="text" id="price" placeholder="Quais tecnologias usam?" value={price} onChange={event => setPrice(event.target.value)} />
+            <input type="text" id="price" placeholder="Valor" value={price} onChange={event => setPrice(event.target.value)} />
             <button className="btn">Cadastrar</button>
 
         </form>)
